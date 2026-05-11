@@ -1,0 +1,28 @@
+name: Deploy Production
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    FREESTYLE_API_KEY: ${{ secrets.FREESTYLE_API_KEY }}
+
+jobs:
+    deploy:
+        name: Deploy production
+        runs-on: ubuntu-latest
+        defaults:
+            run:
+                working-directory: adorable
+        steps:
+            - uses: actions/checkout@v6
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: "22"
+            - run: |
+                  npx freestyle-sh deploy \
+                    --build \
+                    --domain=adorable-demo.style.dev \
+                    --timeout=100000000 \
+                    --env FREESTYLE_API_KEY=${{ secrets.FREESTYLE_API_KEY }} \
